@@ -1,0 +1,397 @@
+---
+title: "R Notebook"
+author: "Jonathan Calvopiña Merchan"
+date: "17/1/2022"
+output: html_notebook
+---
+
+## 1) Generadores congruenciales
+
+### 1.1) Generador Congruencial lineal Mixto
+
+$$\ x_{n} =\ (ax_{n-1} + c)\ mod\ m  $$
+
+### 1.2) Generador Congruencial multiplicativo o  generador de numeros pseudoaleatorios de Lehmer
+
+$$\ x_{n} =\ (ax_{n-1})\ mod\ m  $$
+
+es cuando c = 0
+
+Siendo : 
+
+$\ x_{n-1}$ = numero anterior semilla
+
+a = multiplicador
+
+c = incremento
+
+m = modulo
+
+Donde:
+
+$$ \ m > 0 $$
+$$ \ 0 <a<m \ $$
+$$ \ 0 \leq c <m $$
+
+$$\ 0 \leq x_{0} < m $$
+
+
+```{r}
+#Generador 
+m.cong <- function(x0,a,c,m,M){
+  aux<-numeric(m)
+  aux[1]<-x0
+  for(i in 2:m){
+    aux[i]<-(aux[i-1]*a+c)%%M
+  }
+  #aux #para valores de Lehmer
+  (aux/M)[-1] #Variables aleatorias
+}
+```
+
+
+Los GCL  mas eficientes tienen un modulo igual a una potencia de 2, siendo mas frecuentes $$\ m =\ 2^{32} o  \ m =\ 2^{64} $$
+
+Datos para el generador cogruencial lineal
+
+$$ \ x_{0} = 1 \ ; \ a = 6 \; \ c = 9 \ ; m = 17 $$
+
+```{r}
+#Semilla 1
+#valores 17
+m.cong(x0 = 1, a= 6, c=9, m =17 ,M= 100)
+```
+
+Datos para el generador congruencial multiplicativo o  generador de numeros pseudoaleatorios de Lehmer
+
+$$ \ x_{0} = 13 \ ; \ a = 3 \; \ c = 0 \ ; m = 31 $$
+```{r}
+#Semilla 13
+#Valores Aleatorios 31
+m.cong(x0 = 13, a= 3, c=0, m =31 ,M= 100)
+
+```
+
+```{r}
+muestra <- m.cong(x0 = 13, a= 3, c=0, m =31 ,M= 100)
+```
+
+### 2) Periodo
+
+Nos permite detectar cuando se vuelve a repetirse los valores aleatorios
+
+```{r}
+period <- function(x){
+  dif <- 1
+  i <- 1
+  while (dif[i] != 0) {
+    dif[i+1]<- x[i+1] - x[1]
+    i <- i +1
+  }
+  length(dif)-1
+}
+
+period(muestra)
+
+```
+
+```{r}
+#Diagrama de dispersión 
+plot(muestra)
+#Histograma
+hist(muestra)
+```
+Según la teoría de los grandes números para que se aproxime y sea un buen indicador de una muestra de variables aleatorias.
+
+tiene que aproximarse a :
+
+$$\ media = \mu = \frac{\sum_{i=1}^N \ x_{i}}{N}   = \ 1/2 = 0.5 $$
+
+
+$$\ varianza = \sigma^2 = \frac{\sum_{i=1}^N \ (x_{i}- \mu)^2}{N}   = \ 1/12 = 0.8333 $$
+Media $\mu$
+
+```{r}
+mean(muestra)
+```
+
+Varianza $\sigma$
+
+```{r}
+var(muestra)
+```
+
+### 3) Constrastes de bondad de ajuste
+
+Se necesita para verificar si las observaciones obtenidas de la distribución son realmente de una muestra aleatoria simple de U(0,1).
+
+### Planteamiento del problema 
+
+Sea $\ (\ U_{1},...,U_{n})$ v.a.i.i.d según U, con función de distribución $\ F(x)$ no conocida y $\ F_{0}(x)$ contraste conocido
+
+#### Planteamiento de la Hipótesis
+
+$$\ H_{0} : \ F(x) = \ F_{0}(x) \\ \ H_{1} : \ F(x) \neq \ F_{0}(x) $$
+donde $$ \ F_{0}(x) $$ es la función de distribución de una variable aleatoria U(0,1), por tanto:
+
+$$
+f(x)=\left\{
+\begin{array}{ll}
+0 & \text{si }x\leq 0 \\
+x   &  \text{si } 0 \leq\ x\leq 1 \\
+1 & \text{si }x\geq 1
+\end{array}
+\right.
+$$
+
+Se aplica varios procedimientos de contraste pero los mas usados son el de Kolmogorov-Smirnov, no parametrico y el de la $\chi^{2}$ , relacionado con el contraste de razón de verosimilidades de la multinomial.
+
+
+### 3.1) Contraste de kolmogorov-Smirnov
+
+La herramienta clave en estos contrastes es la función de distribución empírica, $\ F_{n}^{*}(x)$ , obtenida a partir de la muestra $\ (\ U_{1},...,U_{n})$, una vez ordenada $\ U_{1:n} \leq ... \leq \ U_{n:n}$ se define
+
+$$
+F_{n}^{*}(x) =\left\{
+\begin{array}{ll}
+0 & \text{si }x\leq U_{1:n} \\
+\frac{k}{n}   &  \text{si } U_{k:\ n} \leq\ x\leq U_{k+1 \ :\ n}\ ; \ k = 1,..,n-1 \\
+1 & \text{si }x\geq U_{n:n} 
+\end{array}
+\right.
+$$
+
+El contraste de kolmogorov-Smirnov  utiliza estadísticos que evalúan el grado de alejamiento entre la función de distribución bajo la hipótesis nula y la función de distribución empírica,construida a partir de datos, solo si $\ F_{0}$ es absolutamente continua, así que se puede utilizar en nuestro caso para constrastar el ajuste a una uniforme U(0,1).
+
+Aplicando en r :
+
+```{r}
+#Contraste Kolmogorv-Smirnov
+ks.test(muestra,'punif')
+```
+
+Para el contraste bilateral se utiliza el estadistico:
+
+$$
+D_n = sup_{x} |\ F_{n}^{*}(x) - \ F_{0}(x)| 
+$$
+que se calcula a partir de los estadisticos de ls contrastes unilaterales con 
+
+$$\ H_{0} : \ F(x) \leq \ F_{0}(x) \\ \ H_{0} : \ F(x) \geq \ F_{0}(x) $$
+respectivamente
+
+$$
+D_{n}^{+} = sup_{x} [\ F_{n}^{*}(x) - \ F_{0}(x)] = max\{
+0 , \ max_{(1 \leq i \leq  n)} \ ( \frac{i}{n} - U_{i:n} ) \} 
+$$
+
+$$
+D_{n}^{-} = sup_{x} [\ F_{0}(x) - \ F_{n}^{*}(x)] = max\{
+0 , \ max_{(1 \leq i \leq  n)} \ ( U_{i:n} - \frac{i-1}{n}) \} 
+$$
+
+Entonces
+
+$$
+D_{n} = max\{ D_{n}^{+}, D_{n}^{-}  \} 
+$$
+
+y se rechazara $H_{0}$ para valores grandes del estadístico: a nivel $\alpha$ si
+
+$$
+D_{n} > D_{n, \alpha}
+$$
+donde $D_{n, \alpha}$ se puede encontrar en las tablas correspondientes o utilizando cualquier software estadístico, estos estadísticos son libres y no dependen de $\ F_{0}$ bajo la hipótesis nula.
+
+
+
+A continuación una colección de números posiblemente pseudo-aleatorios.
+
+Ejemplo : Dada 30 0observaciones de una muestra pseudo-aleatoria.
+
+```{r}
+muestra
+```
+arreglamos los valores en una tabla 
+
+```{r}
+u.i.n <- muestra
+n<-length(u.i.n)
+#ordenamos los valores
+ii<- order(muestra)
+n0<- muestra[ii]
+#cantidad de valores
+i <- 1:n  
+n1 <- i/n 
+n2<- ((i-1)/n) 
+n3 <- n1 - n0
+n4 <- n0 - n2
+#Tabla de valores
+data.frame(i,n0 ,n1, n2,n3,  n4)
+```
+
+Buscamos el maximo
+
+```{r}
+#D+
+n3 <- n1 - n0
+#D-
+n4 <- n0 - n2
+#Maximos entre los dos D es D+
+#D+
+max(n3)
+
+#D-
+
+max(n4)
+
+```
+
+
+de donde se deduce que
+
+$$
+\ D_{n}^{+} =  0.4333
+$$
+$$
+\ D_{n}^{-} = 0.14333
+$$
+
+y si $\ D_{n}$ =  0.4333 , si se fija $\alpha$ = 0.20, como n = 30, se obtiene de las tablas 
+
+$$\ D_{n, \alpha} = 0.323  $$ 
+
+que cumple 
+
+$$
+P_{H_{0}} \{ \ D_{n} > D_{n, \alpha} \} = \alpha
+$$
+
+
+Como 0.4333 < 0.323 , no se rechaza la hipótesis nula para cualquier $\alpha \leq 0.20$ , que incluye todos los valores de  $\alpha$ utilizados habitualmente, por lo que es un caso claro de no rechazo de la hipótesis nula.
+
+Con R se puede hallar el valor exacto del p-valor
+
+$$
+\ p-value = \ P_{H_{0}} \{ \ D_{n} > D_{n, \alpha} \} = 0.5886
+$$
+Aplicando R
+
+```{r}
+muestra
+
+n <- length(muestra)
+#Aplicación de la función de R ks.test()
+ks.test(muestra, "punif")
+#class(ks.test(muestra, "punif"))
+#testks<-ks.test(muestra, "punif")
+#attributes(ks.test(muestra, "punif"))
+#testks$p.value
+#testks$statistic
+#testks$method
+
+#Construccion del estadistico
+
+#i/n
+enpi.1 <- seq(0,0.9, by =0.1)
+
+#i-1/n
+enpi.s <- seq(0.1,1, by = 0.1)
+
+muest <- sort(muestra)
+dif1 <-(muest - enpi.1)
+max(dif1)
+difs <-(enpi.s - muest)
+max(difs)
+
+#Funcion de distribucion empirica
+
+empi.numal <- ecdf(muestra)
+empi.numal(muestra)
+plot(ecdf(muestra), main = "Funcion de distribucion empirica")
+points(muestra, empi.numal(muestra), col = "green")
+abline(0,1, lwd =3)
+
+for(i in 1:n ){
+  par(new=TRUE)
+  numal <- runif(100)
+  enpi.numal <- ecdf(numal)
+  empi.numal(numal)
+  plot(ecdf(numal), main= "Funcion de distribucion empirica", xlim = c(0,1), ylim = c(0,1), col = i)
+  points(numal, empi.numal(numal), col = "green")
+  abline(0,1)
+}
+
+#En lugar de abline() se puede representar
+
+di <- function(x){
+  x
+}
+curve(di(x), add = T, col = "red")
+
+#y para otras funciones
+
+di.2 <- function(x){
+  x^2
+}
+curve(di.2(x), add = T)
+
+```
+
+Ejemplo con datos reales
+
+```{r}
+#Ejemplo 
+
+mm <- muestra
+ks.test(mm, "punif")
+
+ecdf(mm)
+empi.mumal2 <- ecdf(mm)
+
+plot(ecdf(mm), main = "Funcion de distribucion empirica")
+points(mm, empi.mumal2(mm), col = "green")
+points(mm, mm, col = "dark red", pch = 19)
+abline(0,1)
+
+empi.l <- seq(0,0.9, by = 0.1)
+empi.s <- seq(0.1, 1, by = 0.1)
+snuml2<- sort(mm)
+
+dfl2 <- (snuml2 - empi.l)
+max(dfl2)
+
+dfs2 <- (empi.s - snuml2)
+max(dfs2)
+
+dif2<- max(dfl2, dfs2)
+
+#Graficamente
+
+for(i in 1: n){
+  lines(c(snuml2[i],snuml2[i]), c(snuml2[i], empi.s[i]),col = "blue")
+}
+for(i in 1:n){
+   lines(c(snuml2[i],snuml2[i]), c(snuml2[i], empi.l[i]),col = "green")
+}
+
+abline(v = 0.83, col = "red", lty = 3, lwd = 2)
+
+#Los 2 ejemplos
+
+par(mfrow = c(1,2))
+plot(ecdf(numal), main = "Funcion de distribucion empirica")
+points(numal, empi.numal(numal), col = "green")
+abline(0,1)
+
+plot(ecdf(mm), main = "Funcion de distribucion empirica")
+points(mm, empi.mumal2(mm), col = "green")
+abline(0,1)
+```
+
+
+
+Hay que poner la raya en el punto mas alejado, aun no termino con el contraste de Kolmogorov-Smirnov visitar el libro de Simulacion con ejercicios en R pagina 66 <https://elibro.net/es/ereader/espoch/111720>
+
+
+
