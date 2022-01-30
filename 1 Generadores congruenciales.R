@@ -12,7 +12,7 @@
 #c = incremento
 #m = modulo
   
-#Generador 
+#Generador para el lineal y el multiplicativo
 m.cong <- function(x0,a,c,m,M){
   aux<-numeric(m)
   aux[1]<-x0
@@ -22,14 +22,12 @@ m.cong <- function(x0,a,c,m,M){
   #aux #para valores de Lehmer
   (aux/M)[-1] #Variables aleatorias
 }
-#Generador congruencial lineal
-#Semilla 1
-#valores 17
+#1.1) Generador congruencial lineal
+#Semilla 1 , valores 17
 m.cong(x0 = 1, a= 6, c=9, m =17 ,M= 100)
 
-#Generador congruencial  multiplicativo
-#Semilla 13
-#Valores Aleatorios 31
+#1.2) Generador congruencial  multiplicativo
+#Semilla 13 , Valores Aleatorios 31
 m.cong(x0 = 13, a= 3, c=0, m =31 ,M= 100)
 
 #1.3) Generador congruencial combinado
