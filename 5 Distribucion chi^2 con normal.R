@@ -3,7 +3,7 @@ set.seed(321)
 inv.exp <- function(n, lambda){
   u <- runif(n)
   -log(1 - u) / lambda
-}
+}#
 ################################################################################
 #2) DISTRIBUCION NORMAL 
 inv.normal <- function(n){
