@@ -26,27 +26,27 @@ ks.test(weibull, "pweibull", shape = 5, scale = 1)
 ################################################################################
 #EJEMPLO PARACTICO: 
 
-#Usando el m閠odo de la inversa, cree una R funci髇 que permita crear n鷐eros
-#provenientes de esta distribuci髇.
+#Usando el m茅todo de la inversa, cree una R funci贸n que permita crear n煤meros
+#provenientes de esta distribuci贸n.
 ############f(x) = (k/lambda)((x/lambda)^(k-1))(e^(-(x/lambda)^k))##############
 aweibull <- function(n, k, lambda){
   u <- runif(n)
   lambda*(-log(1 - u))^(1/k)
 }
-# Cree una muestra de 10000 (diez mil) n鷐eros aleatorios, usando la funci髇 de la 
-# Pregunta 1. Mediante un gr醘ico pruebe que la distribuci髇 de la muestra se
-# ajusta a la distribuci髇 te髍ica de weibull. Use par醡etros k = 2, lambda = 1/2.
+# Cree una muestra de 10000 (diez mil) n煤meros aleatorios, usando la funci贸n de la 
+# Pregunta 1. Mediante un gr谩fico pruebe que la distribuci贸n de la muestra se
+# ajusta a la distribuci贸n te贸rica de weibull. Use par谩metros k = 2, lambda = 1/2.
 set.seed(1234)
 muestra <- aweibull(n = 10000, k = 2, lambda = 1/2)
 hist(muestra, probability = T, main = '', xlab = '', ylab = '')
 curve(dweibull(x, shape = 2, scale = 1/2), col = 'red', add = T)
 # Mediante una prueba de bondad de ajuste y usando los datos creados en la 
-# Pregunta 2, contraste la hip髏esis:
+# Pregunta 2, contraste la hip贸tesis:
 # H0 : Los datos provienen de una Weib(k = 2, lambda = 1/2) Vs 
 # H1 : Los datos no provienen de una Weib(k=2, lambda = 1/2)
 ks.test(muestra, 'pweibull', shape = 2, scale = 1/2)
 # Como pval > alpha, no rechazamos H0 y concluimos que no existe evidencia
 # suficiente para decir que los datos
-# provienen de una distribuci髇 distinta a la de Weibull.
+# provienen de una distribuci贸n distinta a la de Weibull.
 ################################################################################
 
