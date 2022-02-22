@@ -23,6 +23,7 @@ inv.normal <- function(n){
   x
 }
 normal<- inv.normal(10^6)
+###############################################################################
 hist(normal, main = "DISTRIBUCION NORMAL", probability = T)
 curve(dnorm(x), col = "red", add = T)#Distribucion teorica
 #Prueba Analitica(kolmogorov-Smirlov)
