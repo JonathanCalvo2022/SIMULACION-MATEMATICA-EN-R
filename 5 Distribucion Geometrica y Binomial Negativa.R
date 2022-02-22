@@ -1,6 +1,6 @@
 set.seed(789)
 ################################################################################
-#Distribucion Geométrica
+#Distribucion GeomÃ©trica
 v.a.g<- function(n,lamda=p){
   normal<-runif(n)
   digeo<-c()
@@ -16,7 +16,7 @@ curve(dgeom(x,prob = 0.7),col="red",add = T)
 ks.test(g, "pgeom",prob=0.7)
 #p.value>0.05 No rechazar H0:(sigue la misma distribucion normal)
 ################################################################################
-#Distribución Binomial Negativa
+#DistribuciÃ³n Binomial Negativa
 v.a.bn <- function(n,r,p){
   bn <- replicate(r,v.a.g(10^4,0.7))
   bn <- rowSums(bn)
