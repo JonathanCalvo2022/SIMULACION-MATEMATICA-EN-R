@@ -35,7 +35,7 @@ lines(y, lambda * exp(-lambda * y)) # density curve f(x)
 #Media y varianza obtenido de la muestra
 mean(Z)
 var(Z)
-#Media y varianza ideal
+#Media y varianza ideal teorica
 media <- 1/13 ;media
 varianza <- 1/13^2 ;varianza
 
