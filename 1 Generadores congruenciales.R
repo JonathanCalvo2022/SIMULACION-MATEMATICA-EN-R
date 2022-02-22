@@ -22,14 +22,15 @@ m.cong <- function(x0,a,c,m,M){
   #aux #para valores de Lehmer
   (aux/M)[-1] #Variables aleatorias
 }
+##################################################################
 #1.1) Generador congruencial lineal
 #Semilla 1 , valores 17
 m.cong(x0 = 1, a= 6, c=9, m =17 ,M= 100)
-
+##################################################################
 #1.2) Generador congruencial  multiplicativo
 #Semilla 13 , Valores Aleatorios 31
 m.cong(x0 = 13, a= 3, c=0, m =31 ,M= 100)
-
+##################################################################
 #1.3) Generador congruencial combinado
 cong.mix <- function(n,a,m,seed){
   k <- length(a)
@@ -42,5 +43,5 @@ cong.mix <- function(n,a,m,seed){
   ri
 }
 cong.mix(n = 10,a = c(2,11,5),m = c(16,32,128),seed = c(12,7,120))
-
+##################################################################
 
