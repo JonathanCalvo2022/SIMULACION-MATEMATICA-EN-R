@@ -1,1 +1,2 @@
-# El repertorio consta todas las distribuciones hechas por el metodo de inversa y las pruebas respectivas para comprobacion de si son o no similares a la distribucion teorica, siendo asi K-S aplicado unicamente a distribuciones continuas, y ji cuadrado a continuos y discretas
+# Transformada inversa de Laplace https://www.youtube.com/playlist?list=PL9SnRnlzoyX25JXGxmFgMEnexFeml0zKu
+# Simulacion Matematica
