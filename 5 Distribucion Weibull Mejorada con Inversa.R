@@ -12,5 +12,5 @@ curve(dweibull(x,shape = 2,scale = 1/3),add=T,col=2)
 # Realizando la prueba de bondad de ajuste se tiene que Kolmogorov-Smirnov
 ks.test(X,"pweibull",shape=2,scale=1/3)
 ################################################################################
-# p.value> 0.5 No se rechaza la H0(Sigue una distribucion uniforme)
+# p.value> 0.05 No se rechaza la H0(Sigue una distribucion uniforme)
 ################################################################################
