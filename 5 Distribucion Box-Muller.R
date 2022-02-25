@@ -26,3 +26,8 @@ curve(dnorm(x),col = "red", add = T)
 lillie.test(bs)
 #p.value > 0.05 No se rechaza la H0:(Sigue una distribucion normal)
 #####################################FIN########################################
+# promedio real
+mean(bs)
+# promedio teorico
+mean(rnorm(100000))
+################################################################################
