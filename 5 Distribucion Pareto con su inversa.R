@@ -14,3 +14,9 @@ curve(dPareto(x,t= 5, alpha = 3),col="red",add = T)
 ks.test(pareto, "pPareto",t =5,alpha =3)
 #p.value>0.05 No rechazar H0:(sigue la misma distribucion normal)
 ################################################################################
+muestra.teorica<- rPareto(n=100,t = 5,alpha = 3)
+mean(muestra.teorica)
+## muestra real -----
+mean(pareto)
+################################################################################
+
